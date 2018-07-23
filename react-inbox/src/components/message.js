@@ -14,13 +14,18 @@ class Message extends Component {
        toggleStar(message);
      };
      const labels = message.labels.map((label, index) => (
-      <span key={index} className="label label-warning">
+      <span
+        key={index}
+        className="label label-warning"
+      >
         {label}
       </span>
     ))
 
     return(
-      <div className={`row message ${readClass} ${selectedClass}`}>
+      <div
+        className={`row message ${readClass} ${selectedClass}`}
+      >
         <div className="col-xs-1">
           <div className="row">
             <div className="col-xs-2">
@@ -28,14 +33,20 @@ class Message extends Component {
                 type="checkbox"
                 checked={!!message.selected}
                 onClick={() => toggleSelect(message)}
-                readOnly={true} />
+                readOnly={true}
+              />
             </div>
             <div className="col-xs-2">
-              <i className={`star fa ${starClass}`} onClick={starMessage} />
+              <i
+                className={`star fa ${starClass}`}
+                onClick={starMessage}
+              />
             </div>
           </div>
         </div>
-        <div className="col-xs-11">
+        <div
+          className="col-xs-11"
+        >
           {labels}
           {message.subject}
         </div>

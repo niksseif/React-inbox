@@ -8,7 +8,9 @@ class Messages extends Component {
     const { messages, toggleStar, toggleSelect } = this.props
 
     return (
-      <div className="Messages">
+      <div
+        className="Messages"
+      >
         {messages.map(message => (
           <Message
             key={message.id}

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import ToolBar from './components/toolBar'
 import MessagesList from './components/message_list';
 import ComposeMessageComponent from './components/compose_message_component';

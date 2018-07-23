@@ -18,7 +18,8 @@ class ComposeMessageComponent extends Component {
     return (
       <form
         className="form-horizontal well"
-        style={{ display: display ? "block" : "none" }}>
+        style={{ display: display ? "block" : "none" }}
+        >
         <div className="form-group">
           <div className="col-sm-8 col-sm-offset-2">
             <h4>Compose Message</h4>
@@ -47,7 +48,8 @@ class ComposeMessageComponent extends Component {
               type="submit"
               value="Send"
               className="btn btn-primary"
-              onClick={sendMessage}/>
+              onClick={sendMessage}
+            />
           </div>
         </div>
       </form>

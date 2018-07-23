@@ -32,9 +32,12 @@ class ToolBar extends Component {
   <div className="row toolbar">
     <div className="col-md-12">
       <p className="pull-right">
-        <span className="badge badge">{unreadCount}</span>
-        Unread messages
-        </p>
+        <span className="badge badge"
+          >
+          {unreadCount}
+        </span>
+          Unread messages
+      </p>
         <a
           className="btn btn-danger"
             onClick={toggleCompose}>
@@ -78,7 +81,8 @@ class ToolBar extends Component {
                 onChange={e => {
                   removeLabel(e.target.value)
                   e.target.selectedIndex = 0
-                }}>
+                }}
+                >
                 <option>Remove label</option>
                 <option value="dev">dev</option>
                 <option value="personal">personal</option>
