@@ -4,6 +4,11 @@ import Labels from './Labels'
 
 const Message = (props) =>{
 
+  // const toggleStar = (e) => {
+  //    // set state
+  //    const index = props.message
+  // }
+
   return (
     <div className={`row message ${props.message.read ? 'read ' : 'unread'}`} >
       <div className="col-xs-1">
@@ -12,7 +17,7 @@ const Message = (props) =>{
             <input type="checkbox" />
           </div>
           <div className="col-xs-2">
-            <i className={`star fa fa-star${props.message.starred ? '' : '-o'}`}></i>
+            <i className={`star fa fa-star${props.message.starred ? '' : '-o'}`} onClick={ toggleStar()}></i>
           </div>
         </div>
       </div>
@@ -23,4 +28,13 @@ const Message = (props) =>{
     </div>
   );
 }
+
+    // {
+    //   "id": 8,
+    //   "subject": "If we connect the sensor, we can get to the HDD port through the redundant IB firewall!",
+    //   "read": true,
+    //   "starred": true,
+    //   "labels": []
+    // }
+
 export default  Message;
