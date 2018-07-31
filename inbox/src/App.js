@@ -41,7 +41,7 @@ sendMessage = async () => {
         body,
       })
     })
-    console.log(response);
+    console.log(response,"<<<<RESPONSE");
     this.showCompose()
 }
 
@@ -62,9 +62,13 @@ toggleProperty(message, property) {
 
 }
 //switching between properties of unread
-handleToggleRead = message => {
-  this.toggleProperty(message, 'read')
+handleToggleRead = (readStatus) => {
+this.setState({
+  message: this.state.messages.map(
+    message => (message.selected ? {...message, read: readStatus} : message)
+  )
 
+})
 }
 //switching between two properties of starred
 //Pathching the api with our updated stared messages.
@@ -99,8 +103,6 @@ handleToggleSelected = message => {
     showMessages: !this.state.showMessages,
    })
  }
-
-
   render() {
     return (
       <div className="container">
@@ -114,6 +116,7 @@ handleToggleSelected = message => {
         />
         <ComposeMessageComponent
           showCompose={this.state.showComposeForm}
+          sendMessage={this.sendMessage}
         />
         <MessageList
           messages={this.state.messages}

@@ -12,7 +12,6 @@ class Toolbar extends Component {
     const selectedCount = messages.filter(message => message.selected).length
     //this function is for switching between selected classess
     let selectAllClass
-
         switch (selectedCount) {
           case 0:
             selectAllClass = 'fa-square-o'

@@ -3,7 +3,7 @@ import React,{ Component } from 'react';
 class ComposeMessageComponent extends Component {
 
   render() {
-  const { showCompose } = this.props
+  const { showCompose, sendMessage } = this.props
     return (
       <form className={`form-horizontal well ${showCompose ? '' : 'hidden'}`} >
         <div className="form-group">
@@ -25,7 +25,12 @@ class ComposeMessageComponent extends Component {
         </div>
         <div className="form-group">
           <div className="col-sm-8 col-sm-offset-2">
-            <input type="submit" value="Send" className="btn btn-primary"/>
+            <input
+              type="submit"
+              value="Send"
+              className="btn btn-primary"
+              onClick={sendMessage}
+            />
           </div>
         </div>
       </form>
