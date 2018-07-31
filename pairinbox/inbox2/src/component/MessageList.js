@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Message from './Message';
 
 
-const MessageList = (props) => {
-  return props.messages.map(message => <Message message={message} key={message.id}/>)
+class MessageList extends Component {
+  render(){
+  const {messages, toggleStar, toggleSelected, handleToggleStar, handleToggleSelected, handleToggleRead} = this.props
+  return (
+    messages.map(message => <Message
+      message={message}
+      key={message.id}
+      toggleStar={toggleStar}
+      toggleSelected={toggleSelected}
+      handleToggleStar={handleToggleStar}
+      handleToggleSelected={handleToggleSelected}
+      handleToggleRead={handleToggleRead}
 
+    />
+    )
+
+)
+}
   }
 
 

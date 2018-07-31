@@ -1,79 +1,112 @@
 import React, { Component } from 'react';
 import './App.css';
-import ToolBar from './component/Toolbar';
+import Toolbar from './component/Toolbar';
 import MessageList from './component/MessageList';
+import ComposeMessageComponent from './component/composeMessage'
 
 class App extends Component {
   state = {
-    selected:'none',
-    messages:[
-    {
-      "id": 1,
-      "subject": "You can't input the protocol without calculating the mobile RSS protocol!",
-      "read": false,
-      "starred": true,
-      "labels": ["dev", "personal"]
-    },
-    {
-      "id": 2,
-      "subject": "connecting the system won't do anything, we need to input the mobile AI panel!",
-      "read": false,
-      "starred": false,
-      "selected": true,
-      "labels": []
-    },
-    {
-      "id": 3,
-      "subject": "Use the 1080p HTTP feed, then you can parse the cross-platform hard drive!",
-      "read": false,
-      "starred": true,
-      "labels": ["dev"]
-    },
-    {
-      "id": 4,
-      "subject": "We need to program the primary TCP hard drive!",
-      "read": true,
-      "starred": false,
-      "selected": true,
-      "labels": []
-    },
-    {
-      "id": 5,
-      "subject": "If we override the interface, we can get to the HTTP feed through the virtual EXE interface!",
-      "read": false,
-      "starred": false,
-      "labels": ["personal"]
-    },
-    {
-      "id": 6,
-      "subject": "We need to back up the wireless GB driver!",
-      "read": true,
-      "starred": true,
-      "labels": []
-    },
-    {
-      "id": 7,
-      "subject": "We need to index the mobile PCI bus!",
-      "read": true,
-      "starred": false,
-      "labels": ["dev", "personal"]
-    },
-    {
-      "id": 8,
-      "subject": "If we connect the sensor, we can get to the HDD port through the redundant IB firewall!",
-      "read": true,
-      "starred": true,
-      "labels": []
-    }
-]
+    messages:[]
   }
+
+  //fetch messages from API
+  componentDidMount = async () => {
+      const response = await fetch('http://localhost:8082/api/messages')
+      const messages = await response.json()
+
+      this.setState({
+      messages: [
+        ...this.state.messages,
+        ...messages.map(message => ({
+          ...message,
+          selected: false
+        }))
+      ],
+      display: false
+    })
+}
+//posting the new message to the API
+sendMessage = async () => {
+  const subject = document.querySelector('#subject').value
+  const body = document.querySelector('#body').value
+  const response =
+  await fetch('http://localhost:8082/api/messages', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        subject,
+        body,
+      })
+    })
+    console.log(response);
+    this.showCompose()
+}
+
+//update th
+//this is toggle property//using this function to swith between props of the message.
+//for example between read and unread.// stared or unstared
+
+toggleProperty(message, property) {
+  const index = this.state.messages.indexOf(message)
+  this.setState({
+    messages: [
+      ...this.state.messages.slice(0, index),
+      {...message, [property]: !message[property]},
+      ...this.state.messages.slice(index + 1)
+    ]
+  })
+
+}
+//switching between properties of unread
+handleToggleRead = message => {
+  console.log("clicked toggleRead ----------------------");
+  this.toggleProperty(message, 'read')
+  console.log(message,"<<<message");
+}
+//switching between two properties of starred
+handleToggleStar = message => {
+  this.toggleProperty(message, 'starred')
+
+}
+//switching between selected
+handleToggleSelected = message => {
+  this.toggleProperty(message,'selected')
+}
+ showCompose = () => {
+   console.log('composed message clicked');
+   this.setState({
+    showComposeForm: !this.state.showComposeForm,
+    showMessages: !this.state.showMessages,
+   })
+ }
+
+
   render() {
     return (
       <div className="container">
-        <ToolBar selected = {this.state.selected} />
-        <MessageList messages= {this.state.messages} />
+        <div className="App">
+        <Toolbar
+          messages={this.state.messages}
+          read={this.state.toggleRead}
+          starred= {this.state.toggleStar}
+          selected = {this.state.toggSelected}
+          showCompose={this.showCompose}
+        />
+        <ComposeMessageComponent
+          showCompose={this.showCompose}
+        />
+        <MessageList
+          messages={this.state.messages}
+          handleToggleStar={this.handleToggleStar}
+          handleToggleSelected={this.handleToggleSelected}
+          handleToggleRead={this.handleToggleRead}
+        />
       </div>
-    );
+    </div>
+    )
   }
 }
 
