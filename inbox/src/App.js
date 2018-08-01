@@ -163,8 +163,8 @@ handleToggleSelected = message => {
     showMessages: !this.state.showMessages,
    })
  }
-//add label
 
+//add label
 addLabel = async () => {
   const label = document.querySelector('.add-label').value
   const selected = this.state.messages.filter(message => message.selected)
@@ -187,6 +187,51 @@ addLabel = async () => {
   )
 }
 
+//remove Labels
+removeLabel = async () => {
+  const label = document.querySelector('.remove-label').value
+  const selected = this.state.messages.filter(message => message.selected)
+  const messageIds = selected.map(message => message.id)
+  console.log(messageIds, label);
+  await fetch('http://localhost:8082/api/messages',
+    {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
+      messageIds,
+      command: "removeLabel",
+      label,
+    })
+  })
+  .then(response => this.updateMessages()
+  )
+}
+//select all for thr button in the toolbar
+selectAllBtnAction = () => {
+      let numMessageSelected = this.state.messages.filter((message) => {
+        return message.selected
+      }).length
+
+      if(numMessageSelected === this.state.messages.length) {
+        this.setState({
+          message: this.state.messages.map((message) => {
+            message.selected = false
+            return message
+          })
+        })
+      } else {
+        this.setState({
+          message: this.state.messages.map((message) => {
+            message.selected = true
+            return message
+          })
+        })
+      }
+    }
+
 
 
   render() {
@@ -197,12 +242,14 @@ addLabel = async () => {
           messages={this.state.messages}
           read={this.state.toggleRead}
           starred= {this.state.toggleStar}
-          selected = {this.state.toggSelected}
+          selected = {this.state.handleToggleSelected}
           showCompose={this.showCompose}
           handleToggleUnRead={this.handleToggleUnRead}
           handleToggleRead={this.handleToggleRead}
           deleteMessage={this.deleteMessage}
           addLabel={this.addLabel}
+          removeLabel={this.removeLabel}
+          selectAllBtnAction={this.selectAllBtnAction}
         />
         <ComposeMessageComponent
           showCompose={this.state.showComposeForm}
@@ -216,6 +263,7 @@ addLabel = async () => {
           handleToggleUnRead={this.handleToggleUnRead}
           deleteMessage={this.deleteMessage}
           addLabel={this.addLabel}
+          removeLabel={this.removeLabel}
 
         />
       </div>

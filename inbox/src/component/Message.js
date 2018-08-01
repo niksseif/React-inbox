@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 
 class Message extends Component {
   render(){
-    const { message, handleToggleStar, handleToggleSelected, handleToggleRead, addLabel } = this.props
+    const { message, handleToggleStar, handleToggleSelected, handleToggleRead, addLabel,removeLabel } = this.props
 
     const starMessage = e => {
       e.stopPropagation();
@@ -28,7 +28,7 @@ class Message extends Component {
     }
 
     return(
-      <div className={`row message ${message.read ? 'read ' : 'unread'}`} onClick={selectedRead} >
+      <div className={`row message ${message.read ? 'read ' : 'unread'} $message.selected ? 'selected': '' `} onClick={selectedRead} >
         <div className="col-xs-1">
           <div className="row">
             <div className="col-xs-2">
@@ -49,7 +49,7 @@ class Message extends Component {
         </div>
         <div className="col-xs-11">
           <Labels labels={message.labels}
-            
+
            />
           <a href="#">{message.subject}</a>
         </div>
