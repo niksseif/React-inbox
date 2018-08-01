@@ -4,25 +4,12 @@ import React, {Component} from 'react'
 class Toolbar extends Component {
 
   render() {
-    const {messages, showCompose,handleToggleRead,handleToggleUnRead, deleteMessage, addLabel,removeLabel, selectAllBtnAction } = this.props
+    const {messages, showCompose,handleToggleRead,handleToggleUnRead, deleteMessage, addLabel,removeLabel, selectAllBtnAction,toolbarMessageIconChange} = this.props
     //filter theough the messages with read false and count them;
-    let unreadCount = messages.filter(message => message.read === false).length;
-    // console.log(unreadCount,"<<<<unreadCount");
+    console.log(messages,"<<<<messages");
+    // let unreadCount = messages.filter(message => !message.read).length;
     //filter through the selected messages are selected and count them
-    const selectedCount = messages.filter(message => message.selected).length
-    //this function is for switching between selected classess
-    let selectAllClass
-        switch (selectedCount) {
-          case 0:
-            selectAllClass = 'fa-square-o'
-            break;
-          case messages.length:
-            selectAllClass = 'fa-check-square-o'
-            break;
-          default:
-            selectAllClass = 'fa-minus-square-o'
 
-        }
         const composedMessage = e => {
           e.stopPropagation();
           showCompose()
@@ -33,7 +20,9 @@ class Toolbar extends Component {
       <div className="col-md-12">
         <p className="pull-right">
           {/*this is showing the unread count in the toolbar  */}
-          <span className="badge badge">{unreadCount}</span>
+          <span className="badge badge">
+            {/* {unreadCount} */}
+          </span>
           unread messages
         </p>
 
@@ -45,14 +34,15 @@ class Toolbar extends Component {
         <button className="btn btn-default"
           onClick={selectAllBtnAction}
           >
-          <i className={`fa ${selectAllClass}`}></i>
+          <i className={`fa fa${toolbarMessageIconChange}-square-o`}></i>
         </button>
 
-        <button className="btn btn-default" onClick={()=> handleToggleRead(true)}>
+        {/* we want to call handleToggleRead with all the selected messages */}
+        <button className="btn btn-default" onClick={ handleToggleRead}>
           Mark As Read
         </button>
 
-        <button className="btn btn-default" onClick={() => handleToggleUnRead(true)}>
+        <button className="btn btn-default" onClick={ handleToggleUnRead}>
           Mark As Unread
         </button>
 

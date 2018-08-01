@@ -25,6 +25,24 @@ class App extends Component {
       display: false
     })
 }
+//changing classname of the message icons
+toolbarMessageIconChange = () => {
+      let numMessageSelected = this.state.messages.filter((message) => {
+        return message.selected
+      }).length
+
+      let action = ''
+
+      if (numMessageSelected === this.state.messages.length){
+        action = '-check'
+      } else if (numMessageSelected === 0) {
+        action = ''
+      } else {
+        action = '-minus'
+      }
+
+      return action
+    }
 //posting the new message to the API
 sendMessage = async () => {
   const subject = document.querySelector('#subject').value
@@ -88,11 +106,15 @@ toggleProperty(message, property) {
 
 }
 //switching between properties of unread
-handleToggleRead = async (message) => {
+handleToggleRead = async (event,message) => {
+  event.preventDefault()
+  const selectedMessages = this.state.messages.filter(message => message.selected)
+  const messagesIds= selectedMessages.map(message=> {return message.id})
+
   let postData ={
     command: 'read',
-    read : !message.read,
-    messageIds: [message.id]
+    read : true,
+    messageIds: messagesIds
   }
   const messagesJson = await fetch('http://localhost:8082/api/messages', {
         method: 'PATCH',
@@ -102,18 +124,21 @@ handleToggleRead = async (message) => {
         },
         body: JSON.stringify(postData)
       })
-      let messages = await messagesJson.json()
-      console.log("Came back from the patch and parsed json and got: ", messages)
-        // when the response comes back, we should get all the messages back, so just setState on the response
-      this.setState({messages})
+  let messages = await messagesJson.json()
+    // when the response comes back, we should get all the messages back, so just setState on the response
+  this.setState({messages})
 }
 //unread messages
 //
 handleToggleUnRead = async (message) => {
+  const selectedMessages = this.state.messages.filter(message => message.selected)
+  const messagesIds= selectedMessages.map(message=> {return message.id})
+
+  console.log(message,"<<<<<");
   let postData ={
     command: 'read',
-    read : !message.read,
-    messageIds: [message.id]
+    read : false,
+    messageId: messagesIds
   }
   const messagesJson = await fetch('http://localhost:8082/api/messages', {
         method: 'PATCH',
@@ -250,6 +275,7 @@ selectAllBtnAction = () => {
           addLabel={this.addLabel}
           removeLabel={this.removeLabel}
           selectAllBtnAction={this.selectAllBtnAction}
+          toolbarMessageIconChange={this.toolbarMessageIconChange}
         />
         <ComposeMessageComponent
           showCompose={this.state.showComposeForm}
