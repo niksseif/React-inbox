@@ -4,7 +4,7 @@ import React, {Component} from 'react'
 class Toolbar extends Component {
 
   render() {
-    const {messages, showCompose } = this.props
+    const {messages, showCompose,handleToggleRead,handleToggleUnRead, deleteMessage, addLabel } = this.props
     //filter theough the messages with read false and count them;
     let unreadCount = messages.filter(message => message.read === false).length;
     // console.log(unreadCount,"<<<<unreadCount");
@@ -46,15 +46,18 @@ class Toolbar extends Component {
           <i className={`fa ${selectAllClass}`}></i>
         </button>
 
-        <button className="btn btn-default" >
+        <button className="btn btn-default" onClick={()=> handleToggleRead(true)}>
           Mark As Read
         </button>
 
-        <button className="btn btn-default" >
+        <button className="btn btn-default" onClick={() => handleToggleUnRead(true)}>
           Mark As Unread
         </button>
 
-        <select className="form-control label-select add-label" >
+        <select
+          className="form-control label-select add-label"
+          onClick={addLabel}
+           >
           <option>Apply label</option>
           <option value="dev">dev</option>
           <option value="personal">personal</option>
@@ -68,7 +71,7 @@ class Toolbar extends Component {
           <option value="gschool">gschool</option>
         </select>
 
-        <button className="btn btn-default" >
+        <button className="btn btn-default" onClick={deleteMessage} >
           <i className="fa fa-trash-o"></i>
         </button>
       </div>

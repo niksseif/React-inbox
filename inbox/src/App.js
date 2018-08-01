@@ -44,11 +44,37 @@ sendMessage = async () => {
     console.log(response,"<<<<RESPONSE");
     this.showCompose()
 }
+//updating the status of the message.
+updateMessages = async () => {
+  const response = await fetch('http://localhost:8082/api/messages')
+  const json = await response.json()
+  this.setState({messages: json})
+}
+//deleting the message
+deleteMessage =  async () => {
+  const selected = this.state.messages.filter(message => message.selected)
+  const messageIds = selected.map(message => message.id)
 
+  await fetch('http://localhost:8082/api/messages',
+    {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
 
-//update th
+      messageIds,
+      "command": "delete"
+    })
+  })
+  .then(response => this.updateMessages())
+}
+
+//update
 //this is toggle property//using this function to swith between props of the message.
 //for example between read and unread.// stared or unstared
+
 
 toggleProperty(message, property) {
   const index = this.state.messages.indexOf(message)
@@ -62,14 +88,48 @@ toggleProperty(message, property) {
 
 }
 //switching between properties of unread
-handleToggleRead = (readStatus) => {
-this.setState({
-  message: this.state.messages.map(
-    message => (message.selected ? {...message, read: readStatus} : message)
-  )
-
-})
+handleToggleRead = async (message) => {
+  let postData ={
+    command: 'read',
+    read : !message.read,
+    messageIds: [message.id]
+  }
+  const messagesJson = await fetch('http://localhost:8082/api/messages', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(postData)
+      })
+      let messages = await messagesJson.json()
+      console.log("Came back from the patch and parsed json and got: ", messages)
+        // when the response comes back, we should get all the messages back, so just setState on the response
+      this.setState({messages})
 }
+//unread messages
+//
+handleToggleUnRead = async (message) => {
+  let postData ={
+    command: 'read',
+    read : !message.read,
+    messageIds: [message.id]
+  }
+  const messagesJson = await fetch('http://localhost:8082/api/messages', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(postData)
+      })
+      let messages = await messagesJson.json()
+      console.log("Came back from the patch and parsed json and got: ", messages)
+        // when the response comes back, we should get all the messages back, so just setState on the response
+      this.setState({messages})
+}
+
+
 //switching between two properties of starred
 //Pathching the api with our updated stared messages.
 handleToggleStar = async(message) => {
@@ -103,6 +163,32 @@ handleToggleSelected = message => {
     showMessages: !this.state.showMessages,
    })
  }
+//add label
+
+addLabel = async () => {
+  const label = document.querySelector('.add-label').value
+  const selected = this.state.messages.filter(message => message.selected)
+  const messageIds = selected.map(message => message.id)
+  console.log(messageIds, label);
+  await fetch('http://localhost:8082/api/messages',
+    {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({
+      messageIds,
+      command: "addLabel",
+      label,
+    })
+  })
+  .then(response => this.updateMessages()
+  )
+}
+
+
+
   render() {
     return (
       <div className="container">
@@ -113,6 +199,10 @@ handleToggleSelected = message => {
           starred= {this.state.toggleStar}
           selected = {this.state.toggSelected}
           showCompose={this.showCompose}
+          handleToggleUnRead={this.handleToggleUnRead}
+          handleToggleRead={this.handleToggleRead}
+          deleteMessage={this.deleteMessage}
+          addLabel={this.addLabel}
         />
         <ComposeMessageComponent
           showCompose={this.state.showComposeForm}
@@ -123,6 +213,10 @@ handleToggleSelected = message => {
           handleToggleStar={this.handleToggleStar}
           handleToggleSelected={this.handleToggleSelected}
           handleToggleRead={this.handleToggleRead}
+          handleToggleUnRead={this.handleToggleUnRead}
+          deleteMessage={this.deleteMessage}
+          addLabel={this.addLabel}
+
         />
       </div>
     </div>

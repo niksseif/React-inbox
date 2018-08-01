@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 
 class Message extends Component {
   render(){
-    const { message, handleToggleStar, handleToggleSelected, handleToggleRead } = this.props
+    const { message, handleToggleStar, handleToggleSelected, handleToggleRead, addLabel } = this.props
 
     const starMessage = e => {
       e.stopPropagation();
@@ -49,6 +49,7 @@ class Message extends Component {
         </div>
         <div className="col-xs-11">
           <Labels labels={message.labels}
+            
            />
           <a href="#">{message.subject}</a>
         </div>
