@@ -157,24 +157,22 @@ handleToggleUnRead = async (message) => {
 
 //switching between two properties of starred
 //Pathching the api with our updated stared messages.
-handleToggleStar = async(message) => {
-  this.toggleProperty(message, 'starred')
-  let postData = {
-    command:"star",
-    messageId:[message.id]
-  }
+
+  handleToggleStar = async(message) => {
     const messagesJson = await fetch('http://localhost:8082/api/messages',{
-      method:'PATCH',
+      method: "PATCH",
+      body: JSON.stringify({
+        messageIds: [message.id],
+        command: "star",
+        star: message.starred
+      }),
       headers: {
-        'Content-Type':'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify(postData)
-    }
-  )
-  let messages = await messagesJson.json()
-  this.setState({messages})
-}
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+           }
+         })
+    this.toggleProperty(message, 'starred')
+  }
 
 
 //switching between selected
