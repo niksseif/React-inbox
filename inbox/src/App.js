@@ -107,9 +107,9 @@ toggleProperty(message, property) {
 }
 //switching between properties of unread
 handleToggleRead = async (event,message) => {
-  event.preventDefault()
+  // event.preventDefault()
   const selectedMessages = this.state.messages.filter(message => message.selected)
-  const messagesIds= selectedMessages.map(message=> {return message.id})
+  const messagesIds= selectedMessages.map(message => {return message.id})
 
   let postData ={
     command: 'read',
