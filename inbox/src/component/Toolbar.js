@@ -26,8 +26,6 @@ class Toolbar extends Component {
       default:
         selectAllClass = 'fa-minus-square-o';
     }
-
-
     return (
       <div className="row toolbar">
         <div className="col-md-12">
@@ -41,7 +39,7 @@ class Toolbar extends Component {
 
             <a className="btn btn-danger">
               <i
-                className="fa fa-plus"
+                className={!this.props.showComposeForm ? "fa fa-plus" : 'fa fa-minus'}
                 onClick={composedMessage}
               />
             </a>

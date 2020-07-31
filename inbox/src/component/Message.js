@@ -9,6 +9,7 @@ import React, { Component } from 'react';
 // toggleRead, toggleStar, toggleSelected
 
 class Message extends Component {
+  state = { markRead: this.props.markRead }
   render(){
     const { message, handleToggleStar, handleToggleSelected, handleToggleRead, addLabel,removeLabel } = this.props
 
@@ -18,25 +19,30 @@ class Message extends Component {
     }
     //selected messages function
     const selectedMessage = e => {
-      e.stopPropagation();
-      handleToggleSelected(message);
+    e.stopPropagation();  
+    handleToggleSelected(message);
+ 
     }
 
     const selectedRead =  e => {
       e.stopPropagation();
-      handleToggleRead(message);
+     
+       handleToggleRead(e); 
     }
+   
+
 
     return(
-      <div className={`row message ${message.read ? 'read ' : 'unread'} $message.selected ? 'selected': '' `} onClick={selectedRead} >
+      <div className={`row message ${message.read ? 'read ' : 'unread'} ${message.selected ? 'selected' : null} ` } >
         <div className="col-xs-1">
           <div className="row">
             <div className="col-xs-2">
+           
               <input
                 type="checkbox"
-                checked={message.selected}
-                readOnly={true}
-                onClick={selectedMessage}
+                checked={message.selected ? true : false}
+                // readOnly={true}
+                onClick={(e) => selectedMessage(e)}
                />
             </div>
             <div className="col-xs-2">
