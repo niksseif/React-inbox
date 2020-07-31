@@ -148,10 +148,11 @@ handleToggleRead = async (event) => {
 handleToggleUnRead = async (message) => {
   const selectedMessages = this.state.messages.filter(message => message.selected)
   const messagesIds= selectedMessages.map(message=>  message.id)
+  console.log(messagesIds,"<>>>idsssss")
   let postData ={
     command: 'read',
-    read : false,
-    messageId: messagesIds
+    read: false,
+    messageIds: messagesIds
   }
   const messagesJson = await fetch('https://mysterious-woodland-86329.herokuapp.com/api/messages', {
         method: 'PATCH',
@@ -162,15 +163,18 @@ handleToggleUnRead = async (message) => {
         body: JSON.stringify(postData)
       })
       let messages = await messagesJson.json()
+  console.log(messages, "<>>>>>messages from unread,>>>>>>>>>>>>>>>>>>>>>>>")
         // when the response comes back, we should get all the messages back, so just setState on the response
 
         //here i need to assign 2 selected messages to false. for some reason this api is having 2 selected messages assign to true.
   messages.map(message => {
+    
     if (message.selected === true) {
       message.selected = false;
     }
     return message
   })
+  
       this.setState({messages})
 }
 

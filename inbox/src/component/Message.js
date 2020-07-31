@@ -19,8 +19,7 @@ class Message extends Component {
     }
     //selected messages function
     const selectedMessage = e => {
-      e.stopPropagation();  
-      console.log(e.target,"<>>>>eee>>>>>>>>>>>>>>>>>")
+    e.stopPropagation();  
     handleToggleSelected(message);
  
     }

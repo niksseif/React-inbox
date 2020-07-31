@@ -26,8 +26,6 @@ class Toolbar extends Component {
       default:
         selectAllClass = 'fa-minus-square-o';
     }
-
-    console.log(this.props,"<>>>>>propsspspspsppsp>>>>>>>>>>>>")
     return (
       <div className="row toolbar">
         <div className="col-md-12">
