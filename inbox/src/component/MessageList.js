@@ -4,7 +4,7 @@ import Message from './Message';
 
 class MessageList extends Component {
   render(){
-  const {messages, toggleStar, toggleSelected, handleToggleStar, handleToggleSelected, handleToggleRead, handleToggleUnRead, addLabel } = this.props
+  const {messages, toggleStar, toggleSelected, handleToggleStar, handleToggleSelected, handleToggleRead, handleToggleUnRead, addLabel, markRead } = this.props
   return (
     messages.map(message => <Message
       message={message}
@@ -16,7 +16,7 @@ class MessageList extends Component {
       handleToggleRead={handleToggleRead}
       handleToggleUnRead={handleToggleUnRead}
       addLabel={addLabel}
-
+      markRead={markRead}
     />
     )
 

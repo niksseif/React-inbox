@@ -6,12 +6,13 @@ import ComposeMessageComponent from './component/composeMessage'
 
 class App extends Component {
   state = {
-    messages:[]
+    messages:[],
+   
   }
 
   //fetch messages from API
   componentDidMount = async () => {
-      const response = await fetch('http://localhost:8082/api/messages')
+    const response = await fetch('https://mysterious-woodland-86329.herokuapp.com/api/messages')
       const messages = await response.json()
 
       this.setState({
@@ -48,7 +49,7 @@ sendMessage = async () => {
   const subject = document.querySelector('#subject').value
   const body = document.querySelector('#body').value
   const response =
-  await fetch('http://localhost:8082/api/messages', {
+    await fetch('https://mysterious-woodland-86329.herokuapp.com/api/messages', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -59,13 +60,19 @@ sendMessage = async () => {
         body,
       })
     })
-    console.log(response,"<<<<RESPONSE");
+   
     this.showCompose()
 }
 //updating the status of the message.
 updateMessages = async () => {
-  const response = await fetch('http://localhost:8082/api/messages')
+  const response = await fetch('https://mysterious-woodland-86329.herokuapp.com/api/messages')
   const json = await response.json()
+  json.map(message => {
+    if (message.selected === true) {
+      message.selected = false;
+    }
+    return message
+  })
   this.setState({messages: json})
 }
 //deleting the message
@@ -73,7 +80,7 @@ deleteMessage =  async () => {
   const selected = this.state.messages.filter(message => message.selected)
   const messageIds = selected.map(message => message.id)
 
-  await fetch('http://localhost:8082/api/messages',
+  await fetch('https://mysterious-woodland-86329.herokuapp.com/api/messages',
     {
       method: 'PATCH',
       headers: {
@@ -96,27 +103,26 @@ deleteMessage =  async () => {
 
 toggleProperty(message, property) {
   const index = this.state.messages.indexOf(message)
-  this.setState({
-    messages: [
-      ...this.state.messages.slice(0, index),
-      {...message, [property]: !message[property]},
-      ...this.state.messages.slice(index + 1)
-    ]
+  let prop = { ...message, [property] : !message[property]}
+  let re = [...this.state.messages.slice(0, index), prop, ...this.state.messages.slice(index + 1)]
+   this.setState({
+    messages: re
   })
+
 
 }
 //switching between properties of unread
-handleToggleRead = async (event,message) => {
-  // event.preventDefault()
+handleToggleRead = async (event) => {
+  event.preventDefault()
   const selectedMessages = this.state.messages.filter(message => message.selected)
   const messagesIds= selectedMessages.map(message => {return message.id})
-
+  
   let postData ={
     command: 'read',
     read : true,
     messageIds: messagesIds
   }
-  const messagesJson = await fetch('http://localhost:8082/api/messages', {
+  const messagesJson = await fetch('https://mysterious-woodland-86329.herokuapp.com/api/messages', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -125,22 +131,29 @@ handleToggleRead = async (event,message) => {
         body: JSON.stringify(postData)
       })
   let messages = await messagesJson.json()
+//here since the data is giving me always 2 messages with option selected true i need to assign selected to false.
+  messages.map(message =>{
+    if(message.selected === true){
+      message.selected = false;
+    }
+    return message
+  })
+
     // when the response comes back, we should get all the messages back, so just setState on the response
   this.setState({messages})
+  
 }
 //unread messages
 //
 handleToggleUnRead = async (message) => {
   const selectedMessages = this.state.messages.filter(message => message.selected)
-  const messagesIds= selectedMessages.map(message=> {return message.id})
-
-  console.log(message,"<<<<<");
+  const messagesIds= selectedMessages.map(message=>  message.id)
   let postData ={
     command: 'read',
     read : false,
     messageId: messagesIds
   }
-  const messagesJson = await fetch('http://localhost:8082/api/messages', {
+  const messagesJson = await fetch('https://mysterious-woodland-86329.herokuapp.com/api/messages', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -149,8 +162,15 @@ handleToggleUnRead = async (message) => {
         body: JSON.stringify(postData)
       })
       let messages = await messagesJson.json()
-      console.log("Came back from the patch and parsed json and got: ", messages)
         // when the response comes back, we should get all the messages back, so just setState on the response
+
+        //here i need to assign 2 selected messages to false. for some reason this api is having 2 selected messages assign to true.
+  messages.map(message => {
+    if (message.selected === true) {
+      message.selected = false;
+    }
+    return message
+  })
       this.setState({messages})
 }
 
@@ -159,7 +179,7 @@ handleToggleUnRead = async (message) => {
 //Pathching the api with our updated stared messages.
 
   handleToggleStar = async(message) => {
-    const messagesJson = await fetch('http://localhost:8082/api/messages',{
+    const messagesJson = await fetch('https://mysterious-woodland-86329.herokuapp.com/api/messages',{
       method: "PATCH",
       body: JSON.stringify({
         messageIds: [message.id],
@@ -177,10 +197,9 @@ handleToggleUnRead = async (message) => {
 
 //switching between selected
 handleToggleSelected = message => {
-  this.toggleProperty(message,'selected')
+  return this.toggleProperty(message,'selected')
 }
  showCompose = () => {
-   console.log('composed message clicked');
    this.setState({
     showComposeForm: !this.state.showComposeForm,
     showMessages: !this.state.showMessages,
@@ -192,8 +211,8 @@ addLabel = async () => {
   const label = document.querySelector('.add-label').value
   const selected = this.state.messages.filter(message => message.selected)
   const messageIds = selected.map(message => message.id)
-  console.log(messageIds, label);
-  await fetch('http://localhost:8082/api/messages',
+
+  await fetch('https://mysterious-woodland-86329.herokuapp.com/api/messages',
     {
       method: 'PATCH',
       headers: {
@@ -213,10 +232,10 @@ addLabel = async () => {
 //remove Labels
 removeLabel = async () => {
   const label = document.querySelector('.remove-label').value
+  
   const selected = this.state.messages.filter(message => message.selected)
   const messageIds = selected.map(message => message.id)
-  console.log(messageIds, label);
-  await fetch('http://localhost:8082/api/messages',
+  await fetch('https://mysterious-woodland-86329.herokuapp.com/api/messages',
     {
       method: 'PATCH',
       headers: {
@@ -229,7 +248,7 @@ removeLabel = async () => {
       label,
     })
   })
-  .then(response => this.updateMessages()
+  .then(response => this.updateMessages(response)
   )
 }
 //select all for thr button in the toolbar
@@ -267,6 +286,7 @@ selectAllBtnAction = () => {
           starred= {this.state.toggleStar}
           selected = {this.state.handleToggleSelected}
           showCompose={this.showCompose}
+          showComposeForm = {this.state.showComposeForm}
           handleToggleUnRead={this.handleToggleUnRead}
           handleToggleRead={this.handleToggleRead}
           deleteMessage={this.deleteMessage}
@@ -278,6 +298,7 @@ selectAllBtnAction = () => {
         <ComposeMessageComponent
           showCompose={this.state.showComposeForm}
           sendMessage={this.sendMessage}
+
         />
         <MessageList
           messages={this.state.messages}
@@ -288,6 +309,7 @@ selectAllBtnAction = () => {
           deleteMessage={this.deleteMessage}
           addLabel={this.addLabel}
           removeLabel={this.removeLabel}
+          markRead={this.state.markRead}
 
         />
       </div>
